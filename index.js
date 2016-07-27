@@ -1,4 +1,4 @@
-import Koa from 'koa'
+import Koa from 'koa.io'
 import Router from 'koa-router'
 import Rethink from 'rethinkdb'
 import BodyParser from 'koa-body-parser'
@@ -18,25 +18,39 @@ Rethink.connect( rethinkdb, function(err, conn) {
 router.get('/fetch/:tablename', fetchTableData);
 router.post('/insertshow', insertDocument);
 
+app.io.route('new data', function* () {
+	let message = this.args[0];
+	this.broadcast.emit('new message', message);
+})
+
 
 //ctx.request.body.name
+// ["title","directory","tvrage","TVmaze","startDate","endDate","episodesCount","runTime","network","country"]
 function* insertDocument(next) {
- 	let name 		 = this.request.body.name
- 	let show 		 = this.request.body.show 	
- 	let title1 	 = this.request.body.title1
- 	let title2 	 = this.request.body.title2
- 	let title3 	 = this.request.body.title3
- 	let content1 = this.request.body.content1
- 	let content2 = this.request.body.content2
- 	let content3 = this.request.body.content3 	 
+	console.log(this.request.body)
+ 	let title 		 		 = this.request.body.title
+ 	let directory 		 = this.request.body.directory 	
+ 	let tvrage 	 			 = this.request.body.tvrage
+ 	let TVmaze 	 			 = this.request.body.TVmaze
+ 	let startDate 	 	 = this.request.body.startDate
+ 	let endDate 			 = this.request.body.endDate
+ 	let numberOfEpisodes   = this.request.body.numberOfEpisodes
+ 	let runTime 			 = this.request.body.runTime 	 
+ 	let network 			 = this.request.body.network 
+ 	let country 			 = this.request.body.country  		 	
 
 	let data = yield Rethink.table('tv_history').insert([
-    { name: name, tv_show: show,
-      posts: [
-        {title: title1, content: content1},
-        {title: title2, content: content2},
-        {title: title3, content: content3}
-      ]
+    { 
+    	title: title,
+    	directory: directory,
+    	tvrage: tvrage,
+     	TVmaze: TVmaze,
+    	startDate: startDate,
+    	endDate: endDate,
+    	numberOfEpisodes: numberOfEpisodes,
+    	runTime: runTime,
+    	network: network,
+    	country: country
     }]).run(connection);	
 	this.body = data;
 }
