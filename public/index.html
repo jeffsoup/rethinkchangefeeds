@@ -1,0 +1,36 @@
+
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	<script>
+	  var socket = io(); //io.connect('http://example.com:3333');
+    socket.on('insert', function (data) {
+      console.log('Record Inserted: ' + JSON.stringify(data))
+      $("#records").append(data.obj.title + ', Episodes: ' + data.obj.numberOfEpisodes + ', Start: ' + data.obj.startDate + ', Run Time: ' + data.obj.runTime + '<br>');
+    });
+    // Whenever the server emits 'new message', update the chat body
+    socket.on('new message', function (data) {
+      $("#message").html(data.username + ': ' + data.message);
+    });   
+	</script>
+</head>
+<body>   
+  Records:
+  <div id="records">
+  </div>  
+
+  <script>
+    $( "#target" ).click(function() {
+      socket.emit('addUser', 'Fred Flinstone');
+    }); 
+    $( "#messageTarget" ).click(function() {
+      console.log('messageTarget fired')
+      socket.emit('new message', 'Fred Flinstone');
+    });     
+    </script>
+
+</body>
+</html>
+
+
