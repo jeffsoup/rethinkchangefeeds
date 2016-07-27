@@ -113,7 +113,7 @@ function* fetchTableData(next) {
 }
 
 router.get('/createtable/:tablename', function *(next) {
-	Rethink.db('test').tableCreate(this.params.tablename).run(connection, function(err, result) {
+	Rethink.db('dicomTT').tableCreate(this.params.tablename).run(connection, function(err, result) {
 	    if (err) throw err;
 	})
 	this.body = 'Done'

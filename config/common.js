@@ -1,9 +1,9 @@
 module.exports = {
     rethinkdb: {
-        host: "localhost",
+        host: "dicom-rethinkdb.cleverbuild.biz",
         port: 28015,
         authKey: "",
-        db: "test"
+        db: "dicomTT"
     },
     koa: {
         port: 3000
