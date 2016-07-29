@@ -3,7 +3,24 @@ import Router from 'koa-router'
 import Rethink from 'rethinkdb'
 import BodyParser from 'koa-body-parser'
 import Serve from 'koa-static'
-import {rethinkdb, koa} from './config/common'
+import horizon from '@horizon/server'
+import {rethinkdb, koa, auth} from './config/common'
+
+const horizonOptions = 
+{
+	project_name: 'test',
+	rdb_host: rethinkdb.host,
+	rdb_port: rethinkdb.port,
+  auto_create_index: true,
+  permissions: false,
+	auto_create_collection: true,
+	auto_create_index: true,  
+	auth: {
+		token_secret: auth.token_secret,
+		allow_anonymous: true,
+		allow_unauthenticated: true
+	}
+}
 
 const app = Koa()
 // const io = new IO()
@@ -12,9 +29,6 @@ const router = new Router()
 app.use(BodyParser())
 app.use(Serve(__dirname + '/public'))
 
-// const io = require('socket.io').listen(app)
-
-// io.attach( app )
 
 var connection
 
@@ -91,7 +105,7 @@ function* insertDocument(next) {
  	let network 			 = this.request.body.network 
  	let country 			 = this.request.body.country  		 	
 
-	let data = yield Rethink.table('tv_history').insert([
+	let data = yield Rethink.table('tv_history_0786d4103240').insert([
     { 
     	title: title,
     	directory: directory,
@@ -135,5 +149,6 @@ app
   .use(router.routes())
   .use(router.allowedMethods());
 
-console.log('Listening on :' + koa.port);
-app.listen(koa.port)
+const httpServer = app.listen(koa.port)
+console.log('Listening on :' + koa.port)
+const horizonServer = horizon(httpServer, horizonOptions)

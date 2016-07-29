@@ -1,14 +1,11 @@
 config:
-  target: 'http://localhost:3000'
+  target: 'http://localhost:3030'
   phases:
-    - duration: 50
+    - duration: 10
       arrivalRate: 1
     # - duration: 60
     #   arrivalRate: 5
-    #   rampTo: 25    
-    # - duration: 100
-    #   arrivalRate: 50
-    #   rampTo: 25        
+    #   rampTo: 25          
   payload:
     path: shows.csv
     fields: ["title","directory","tvrage","TVmaze","startDate","endDate","numberOfEpisodes","runTime","network","country"]
